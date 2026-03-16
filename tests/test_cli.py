@@ -1,0 +1,47 @@
+import zipfile
+from pathlib import Path
+from ai2_renamer.cli import main
+
+
+def make_aia(path: Path, screen: str) -> None:
+    with zipfile.ZipFile(path, "w") as zf:
+        zf.writestr(f"src/appinventor/ai_user/MyApp/{screen}.scm", f'{{"$Name":"{screen}"}}')
+        zf.writestr(f"src/appinventor/ai_user/MyApp/{screen}.bky", "<xml/>")
+
+
+def test_main_writes_output_file(tmp_path):
+    input_file = tmp_path / "MyApp.aia"
+    make_aia(input_file, "Screen1")
+    output_file = tmp_path / "MyApp_renamed.aia"
+    main([str(input_file), "Screen1", "NewName", str(output_file)])
+    assert output_file.exists()
+
+
+def test_main_output_contains_renamed_screen(tmp_path):
+    input_file = tmp_path / "MyApp.aia"
+    make_aia(input_file, "Screen1")
+    output_file = tmp_path / "MyApp_renamed.aia"
+    main([str(input_file), "Screen1", "NewName", str(output_file)])
+    with zipfile.ZipFile(output_file) as zf:
+        names = set(zf.namelist())
+    assert "src/appinventor/ai_user/MyApp/NewName.scm" in names
+    assert "src/appinventor/ai_user/MyApp/Screen1.scm" not in names
+
+
+def test_auto_output_filename(tmp_path):
+    input_file = tmp_path / "MyApp.aia"
+    make_aia(input_file, "Screen1")
+    main([str(input_file), "Screen1", "NewName"])
+    assert (tmp_path / "MyApp_NewName.aia").exists()
+
+
+def test_main_reads_sys_argv(tmp_path, monkeypatch):
+    input_file = tmp_path / "MyApp.aia"
+    make_aia(input_file, "Screen1")
+    output_file = tmp_path / "MyApp_renamed.aia"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["ai2-screen-renamer", str(input_file), "Screen1", "NewName", str(output_file)],
+    )
+    main()
+    assert output_file.exists()
