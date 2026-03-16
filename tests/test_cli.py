@@ -35,6 +35,22 @@ def test_auto_output_filename(tmp_path):
     assert (tmp_path / "MyApp_NewName.aia").exists()
 
 
+def test_no_args_exits_with_usage(capsys):
+    import pytest
+    with pytest.raises(SystemExit) as exc:
+        main([])
+    assert exc.value.code == 2
+    assert "usage" in capsys.readouterr().err.lower()
+
+
+def test_help_flag_exits_with_usage(capsys):
+    import pytest
+    with pytest.raises(SystemExit) as exc:
+        main(["--help"])
+    assert exc.value.code == 0
+    assert "usage" in capsys.readouterr().out.lower()
+
+
 def test_main_reads_sys_argv(tmp_path, monkeypatch):
     input_file = tmp_path / "MyApp.aia"
     make_aia(input_file, "Screen1")
