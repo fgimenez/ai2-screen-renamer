@@ -23,9 +23,13 @@ def main(args: list[str] | None = None) -> None:
     parser = _build_parser()
     parsed = parser.parse_args(args)
     output_path = parsed.output or _auto_output(parsed.input, parsed.new_name)
-    data = Path(parsed.input).read_bytes()
-    result = rename_screen(data, parsed.old_name, parsed.new_name)
-    Path(output_path).write_bytes(result)
+    try:
+        data = Path(parsed.input).read_bytes()
+        result = rename_screen(data, parsed.old_name, parsed.new_name)
+        Path(output_path).write_bytes(result)
+    except (ValueError, OSError) as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 def _auto_output(input_path: str, new_name: str) -> str:

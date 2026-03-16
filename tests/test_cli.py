@@ -51,6 +51,17 @@ def test_help_flag_exits_with_usage(capsys):
     assert "usage" in capsys.readouterr().out.lower()
 
 
+def test_error_message_is_friendly(tmp_path, capsys):
+    import pytest
+    input_file = tmp_path / "MyApp.aia"
+    make_aia(input_file, "Screen1")
+    with pytest.raises(SystemExit) as exc:
+        main([str(input_file), "Scree2", "NewName"])
+    assert exc.value.code == 1
+    assert "error" in capsys.readouterr().err.lower()
+    assert "traceback" not in capsys.readouterr().err.lower()
+
+
 def test_main_reads_sys_argv(tmp_path, monkeypatch):
     input_file = tmp_path / "MyApp.aia"
     make_aia(input_file, "Screen1")
