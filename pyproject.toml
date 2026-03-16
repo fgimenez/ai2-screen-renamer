@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ai2-screen-renamer"
-version = "0.2.0"
+version = "0.3.0"
 description = "Rename screens in MIT App Inventor 2 (.aia) projects"
 readme = "README.md"
 requires-python = ">=3.10"
