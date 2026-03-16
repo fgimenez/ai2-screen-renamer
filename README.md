@@ -19,6 +19,12 @@ For a given screen rename (`OldName` → `NewName`), the tool updates:
 Requires Python 3.10+.
 
 ```bash
+pipx install ai2-screen-renamer
+```
+
+Or with pip:
+
+```bash
 pip install ai2-screen-renamer
 ```
 
