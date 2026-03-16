@@ -42,6 +42,8 @@ def rename_screen(aia_bytes: bytes, old_name: str, new_name: str) -> bytes:
     buf = io.BytesIO()
     with _open_zip(aia_bytes) as src, zipfile.ZipFile(buf, "w") as dst:
         filenames = [item.filename for item in src.infolist()]
+        if old_name == "Screen1":
+            raise ValueError("Screen1 cannot be renamed: App Inventor requires it as the launch screen")
         if not any(f"/{old_name}." in f for f in filenames):
             raise ValueError(f"Screen '{old_name}' not found in project")
         if any(f"/{new_name}." in f for f in filenames):

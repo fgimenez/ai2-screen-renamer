@@ -39,18 +39,22 @@ pip install -e .
 ## Usage
 
 ```bash
-# Rename Screen1 to AgendaContactos, output to MyApp_AgendaContactos.aia
-ai2-screen-renamer MyApp.aia Screen1 AgendaContactos
+# Rename Screen2 to AgendaContactos, output to MyApp_AgendaContactos.aia
+ai2-screen-renamer MyApp.aia Screen2 AgendaContactos
 
 # Specify output file explicitly
-ai2-screen-renamer MyApp.aia Screen1 AgendaContactos MyApp_renamed.aia
+ai2-screen-renamer MyApp.aia Screen2 AgendaContactos MyApp_renamed.aia
 ```
 
 Or as a Python module:
 
 ```bash
-python -m ai2_renamer MyApp.aia Screen1 AgendaContactos
+python -m ai2_renamer MyApp.aia Screen2 AgendaContactos
 ```
+
+## Limitations
+
+**`Screen1` cannot be renamed.** App Inventor requires `Screen1` to exist as the launch screen — renaming it would produce a project that fails to build.
 
 ## Errors
 
@@ -59,6 +63,7 @@ The tool raises a descriptive error if:
 - The input file is not a valid `.aia` file
 - The screen to rename does not exist in the project
 - A screen with the new name already exists in the project
+- The screen to rename is `Screen1`
 
 ## Development
 
